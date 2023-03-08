@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <div class="myDiv">WOMEN.</div>
+
+    <script src="jquery-3.6.3.js"></script>
+
+    <script>
+
+        //$ and jQuery is the same selector :D, example of jQuery:
+        $('.myDiv').click(function(){
+            alert('who run the world?');
+        });
+
+        //vanilla JS
+        document.querySelector('.myDiv').addEventListener('click', function(){
+            alert('who run the world?');
+        });
+
+        //if you get elements by className, and just want to select the first matching element, you can do: document.getElementsByClassName('mydiv')[0];
+
+
+    </script>
+
+</body>
+</html>
