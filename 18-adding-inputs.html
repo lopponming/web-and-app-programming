@@ -19,6 +19,9 @@
             background-color: darkkhaki;
             margin: 1rem;
             box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         div#header {
@@ -45,6 +48,13 @@
             border: 4px solid darkcyan;
         }
 
+        .textarea {
+            display: flex;
+            align-items: center;
+            width: 90%;
+            height: 90%;
+        }
+
     </style>
 
     <link rel="stylesheet" href="jquery-ui.css">
@@ -57,7 +67,9 @@
         <div class="plusButton">+</div>
     </div>
 
-    <div class="circle"></div>
+    <div class="circle">
+        <div class="textare" contenteditable="true">change me</div>
+    </div>
     
     <script src="jquery-3.6.3.js"></script>
     <script src="jquery-ui.min.js"></script>
