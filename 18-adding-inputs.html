@@ -48,9 +48,10 @@
             border: 4px solid darkcyan;
         }
 
-        .textarea {
+        .textareaWrap  {
             display: flex;
             align-items: center;
+            justify-content: center;
             width: 90%;
             height: 90%;
         }
@@ -68,7 +69,9 @@
     </div>
 
     <div class="circle">
-        <div class="textare" contenteditable="true">change me</div>
+        <div class="textareaWrap">
+            <div class="textarea" contenteditable="false">change me</div>
+        </div>  
     </div>
     
     <script src="jquery-3.6.3.js"></script>
@@ -76,9 +79,37 @@
 
     <script>
 
+        //DETECT DOUBLE CLICKS ON THE TEXTAREA DIV
+        $('body').on('dblclick', '.textarea', function(){
+            $(this).attr('contenteditable', 'true').focus();
+
+            let myCircle = $(this).closest('.circle');
+
+            if (myCircle.data('ui-draggable')){
+                $(myCircle).draggable('destroy');
+            }
+        })
+
+        //CHECK IF THE TEXT AREA STOPS BEING IN FOCUS
+        $('body').on('blur','.textarea', function(){
+
+            $(this).attr('contenteditable', 'false');
+            $(this).closest('.circle').draggable();
+        })
+
+
+        $('body').on('mousedown', '.textarea', function(event){
+            console.log('mousdown on .textarea');
+            event.stopPropagation();
+        })
+
 
         $('.plusButton').click(function(){
-            let myNewCircle = $('<div class="circle"></div>');
+            let myNewCircle = $(`<div class="circle">
+                                    <div class="textareaWrap">
+                                        <div class="textarea" contenteditable="false">change me</div>
+                                    </div>  
+                                </div>`);
                 $(myNewCircle).animate({
                     width: '20vw',
                     height: '20vw'
