@@ -74,7 +74,7 @@
         <div class="plusButton">+</div>
     </div>
 
-    <div class="circle">
+    <div class="circle" id="c0">
         <div class="textareaWrap">
             <div class="textarea" contenteditable="false">change me</div>
         </div>  
@@ -84,6 +84,8 @@
     <script src="jquery-ui.min.js"></script>
 
     <script>
+
+        let newCircleID = 1;
 
         //DETECT DOUBLE CLICKS ON THE TEXTAREA DIV
         $('body').on('dblclick', '.textarea', function(){
@@ -110,18 +112,25 @@
         })
 
 
+        //CREATE A NEW CIRCLE BY CLICKING ON THE PLUS BUTTON:
         $('.plusButton').click(function(){
             let myNewCircle = $(`<div class="circle">
                                     <div class="textareaWrap">
                                         <div class="textarea" contenteditable="false">change me</div>
                                     </div>  
                                 </div>`);
+                myNewCircle.attr('id', 'c'+ newCircleID);
+                newCircleID++; //grow the varibale by one every time a circle is created
                 $(myNewCircle).animate({
                     width: '20vw',
                     height: '20vw'
                 },2000);
             $('body').append(myNewCircle);
-            $(myNewCircle).draggable();
+            $(myNewCircle).draggable({
+                drag: function (event, ui){
+                    updateLines(this);
+                }
+            });
 
         })
         
@@ -131,7 +140,11 @@
             height: '20vw'
         },2000);
 
-        $('.circle').draggable();
+        $('.circle').draggable({
+                drag: function (event, ui){
+                    updateLines(this);
+                }
+        });
 
 
         //ADD OR REMOVE THE SELECTED CLASS OF A CIRCLE WHEN IT'S CLICKED
@@ -154,6 +167,11 @@
                 console.log('you clicked on a circle while holding shift down');
                 let selectedCircle = $('.selected');
 
+                let selectedCircleID = selectedCircle.attr('id');
+                let clickedCircleID = $(this).attr('id');
+
+                console.log('selectedCircleID ' + selectedCircleID + ' clickedCircleID' + clickedCircleID)
+
                 let selectedCircleWidth = selectedCircle[0].getBoundingClientRect().width;
                 let clickedCircleWidth = $(this)[0].getBoundingClientRect().width;
 
@@ -164,12 +182,12 @@
 
                 console.log('creating a line now' + this);
 
-                createLine(x1pos, y1pos, x2pos, y2pos);
+                createLine(x1pos, y1pos, x2pos, y2pos, selectedCircleID, clickedCircleID);
             }
         })
 
         //CREATE A LINE BETWEEN TWO ELEMENTS (USING FOUR COORDINATES)
-        function createLine(x1, y1, x2, y2){
+        function createLine(x1, y1, x2, y2, selectedCircleID, clickedCircleID){
 
             let length = Math.sqrt(((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)));
             let angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
@@ -190,7 +208,37 @@
                             left: offsetX,
                             top: offsetY
                         })
+                        .attr('data-circle1', selectedCircleID)
+                        .attr('data-circle2', clickedCircleID)
         }
+
+        //UPDATE THE LINES WHEN A CIRCLE IS MOVED
+        function updateLines(circle){
+            
+            let allConnectedLines = $(`.line[data-circle1="${$(circle).attr('id')}"],
+                                    .line[data-circle2="${$(circle).attr('id')}"]`);
+            
+            allConnectedLines.each(function (index, line){
+
+                let lineCircleConnect1 = $(line).data('circle1'); //get the circle ids from the lines
+                let lineCircleConnect2 = $(line).data('circle2');
+
+                let circle1 = $('#' + lineCircleConnect1); //select the circle from dom
+                let circle2 = $('#' + lineCircleConnect2); //select the circle from dom
+
+                let x1Pos = circle1[0].getBoundingClientRect().left + circle1[0].getBoundingClientRect().width / 2;
+                let y1Pos = circle1[0].getBoundingClientRect().top + circle1[0].getBoundingClientRect().height / 2;
+                let x2Pos = circle2[0].getBoundingClientRect().left + circle2[0].getBoundingClientRect().width / 2;
+                let y2Pos = circle2[0].getBoundingClientRect().top + circle2[0].getBoundingClientRect().height / 2;
+
+                $(this).remove();
+
+                createLine(x1Pos, y1Pos, x2Pos, y2Pos, circle1.attr('id'), circle2.attr('id'));
+
+            })
+
+        }
+
 
     </script>
     
