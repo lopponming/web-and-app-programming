@@ -62,6 +62,8 @@
             transform-origin: 0 100%;
         }
 
+
+
     </style>
 
     <link rel="stylesheet" href="jquery-ui.css">
@@ -72,6 +74,7 @@
     <div id="header">
         <h1>mind map maker</h1>
         <div class="plusButton">+</div>
+        <input type="color" id="color">
     </div>
 
     <div class="circle" id="c0">
@@ -237,7 +240,21 @@
 
             })
 
-        }
+        } //update lines
+
+        //change the color of the selected circles BOTH OF THESE WORK
+            /* $('#color').change(function(){
+                console.log($(this).val());
+            }) */
+
+        //this makes you see the color change immediately, dynamically.
+        $('body').on('input', '#color', function(){
+            //console.log($(this).val());
+
+            $('.selected').css("background-color", $(this).val());
+
+        })
+
 
 
     </script>
