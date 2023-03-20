@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>note taking thingy</title>
+
+<style>
+
+#deleteSave {
+    display: block;
+    font-size:14px;
+    font-family:'Courier New', Courier, monospace;
+    width:122px;
+    height:47px;
+    border-width:2px;
+    margin: 1rem;
+    color:#fff;
+    border-color:#314179;
+    font-weight:bold;
+    border-top-left-radius:9px;
+    border-top-right-radius:9px;
+    border-bottom-left-radius:9px;
+    border-bottom-right-radius:9px;
+    box-shadow:inset -3px -3px 10px 0px #7a8eb9;
+    text-shadow:inset 0px 0px 0px #fff;
+    background:linear-gradient(#637aad, #5972a7);
+}
+
+#deleteSave:hover {
+    background: linear-gradient(#5972a7, #637aad);
+}
+
+</style>
+
+</head>
+<body>
+
+    <textarea id="notesArea" cols="30" rows="10"></textarea>
+    <button id="deleteSave">delete</button>
+
+    <script>
+
+
+        let theTextArea = document.querySelector('#notesArea');
+
+        //store the text into "permanent" storage when the input is changed
+        theTextArea.addEventListener("input", function(){
+            const myNotes = this.value;
+            //console.log(myNotes);
+            localStorage.setItem('myNotesData', myNotes);
+        })
+
+        //load the text from permanent storage when the page is ready
+        document.addEventListener('DOMContentLoaded', function(){
+            const myRetrievedNotesData = localStorage.getItem('myNotesData');
+            //console.log(myRetrievedNotesData);
+            theTextArea.value = myRetrievedNotesData;
+        })
+
+        //remove the saved data when clicking the delete button
+        document.querySelector('#deleteSave').addEventListener('click', function(){
+
+            if (confirm("are you really really sure you want to forever remove your notes?")){
+                //code for deleting
+                localStorage.removeItem('myNotesData');
+                theTextArea.value = '';
+            } else {
+                //just cancel
+            }
+
+        })
+
+
+    </script>
+    
+</body>
+</html>
