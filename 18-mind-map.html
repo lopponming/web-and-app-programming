@@ -13,8 +13,8 @@
         }
 
         .circle {
-            width: 5vw;
-            height: 5vw;
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
             background-color: darkkhaki;
             margin: 1rem;
@@ -22,6 +22,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            position: absolute;
+            box-sizing: border-box;
+            box-shadow: 2px 2px 8px #00000080;
         }
 
         div#header {
@@ -75,6 +78,7 @@
         <h1>mind map maker</h1>
         <div class="plusButton">+</div>
         <input type="color" id="color">
+        <input type="range" min="50" max="1500" value="200" id="circleSize">
     </div>
 
     <div class="circle" id="c0">
@@ -242,7 +246,7 @@
 
         } //update lines
 
-        //change the color of the selected circles BOTH OF THESE WORK
+        //CHANGE THE COLOR OF THE SELECTED CIRCLES (BOTH OF THESE WORK)
             /* $('#color').change(function(){
                 console.log($(this).val());
             }) */
@@ -253,6 +257,27 @@
 
             $('.selected').css("background-color", $(this).val());
 
+        })
+
+        //CHANGE THE SIZE OF THE CIRCLES
+        $("#circleSize").on('change input', function(){
+            const scaleValueFromSlider = $(this).val();
+            /* console.log("scaleValueFromSlider: " + scaleValueFromSlider); */
+            $('.selected').each(function(){
+
+                const currentWidth = $(this).outerWidth();
+                //console.log(currentWidth);
+                $(this).css({'width': scaleValueFromSlider, 'height': scaleValueFromSlider});
+
+                const currentPosition = $(this).position();
+
+                let newX = currentPosition.left - (scaleValueFromSlider - currentWidth) / 2;
+                // example: 100 - (400 - 250) / 2 = 25
+                let newY = currentPosition.top - (scaleValueFromSlider - currentWidth) / 2;
+
+                $(this).css({left: newX, top: newY});
+
+            })
         })
 
 
