@@ -13,6 +13,10 @@
             min-height: 90vh;
         }
 
+        #main {
+            min-height: 90vh;
+        }
+
         .circle {
             width: 200px;
             height: 200px;
@@ -39,6 +43,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
         }
 
         #header h1 {
@@ -54,6 +59,10 @@
             border-radius: 0.5rem;
             text-align: center;
             margin: 1.5rem;
+        }
+
+        #fontsize {
+            width: 60%;
         }
 
         .selected {
@@ -110,22 +119,40 @@
 
     <div id="header">
         <div class="uiElem"><h1>mind map maker</h1></div>
-        <div class="uiElem"><div class="plusButton">+</div></div>
-        <div class="uiElem"><input type="color" id="color"></div>
-        <div class="uiElem"><input type="range" min="50" max="1500" value="200" id="circleSize"></div>
-        <div class="uiElem"></div>
-        <div class="uiElem"></div>
+        <div class="uiElem">
+            <h4>add circle</h4>
+            <div class="plusButton">+</div>
+        </div>
+        <div class="uiElem">
+            <h4>change color</h4>
+            <input type="color" id="color">
+        </div>
+        <div class="uiElem">
+            <h4>change size</h4>
+            <input type="range" min="50" max="1500" value="200" id="circleSize"></div>
+        <div class="uiElem">
+            <h4>change font size</h4>
+            <input type="number" id="fontsize" value="16">
+        </div>
+        <div class="uiElem">
+            <h4>change font color</h4>
+            <input type="color" id="fontcolor">
+        </div>
         <div class="uiElem"></div>
         <div class="uiElem"></div>
         <div class="uiElem"></div>
         <div class="uiElem"><button id="deleteSave">delete</button></div>
     </div>
 
-    <div class="circle" id="c0">
-        <div class="textareaWrap">
-            <div class="textarea" contenteditable="false">change me</div>
-        </div>  
+    <div id="main">
+        <div class="circle" id="c0">
+            <div class="textareaWrap">
+                <div class="textarea" contenteditable="false">change me</div>
+            </div>  
+        </div>
     </div>
+
+    
     
     <script src="jquery-3.6.3.js"></script>
     <script src="jquery-ui.min.js"></script>
@@ -151,7 +178,7 @@
             stop: function(event, ui){ //when the dragging stops
                 if ($(this).hasClass('cloned')){
                     let cloned = $(this).data('cloned');
-                    $('body').append(cloned);
+                    $('#main').append(cloned);
                     cloned.css({
                         position: 'absolute',
                         left: ui.offset.left,
@@ -218,6 +245,7 @@
 
         $(document).ready(function(){
             loadFromLocalStorage();
+            $('#main').draggable();
         })
 
         //DETECT DOUBLE CLICKS ON THE TEXTAREA DIV
@@ -259,7 +287,7 @@
                     width: '20vw',
                     height: '20vw'
                 },2000);
-            $('body').append(myNewCircle);
+            $('#main').append(myNewCircle);
             $(myNewCircle).draggable(draggableOptions);
             saveToLocalStorage();
 
@@ -286,8 +314,8 @@
 
 
         //remove selection from circles if you click on the body (on an empty area)
-        $('body').click(function(event){
-            if ($(event.target).is('body')){
+        $('#main').click(function(event){
+            if ($(event.target).is('#main')){
                 $('.circle').removeClass('selected');
                 $('.line').removeClass('selected');
             }
@@ -331,7 +359,7 @@
             offsetY = (y1 > y2) ? y2 : y1;
 
             let line = $('<div>')
-                        .prependTo('body')
+                        .prependTo('#main')
                         .addClass('line')
                         .css({
                             'position': 'absolute',
@@ -419,12 +447,16 @@
                 const circleColor = $(this).css('background-color');
                 const circlePos = $(this).position();
                 const circleWidth = $(this).width();
+                const fontSize = $(this).find('.textarea').css('font-size');
+                const fontColor = $(this).find('.textarea').css('color');
                 circlesData.push({
                     id: circleID,
                     text: circleText,
                     color: circleColor,
                     position: circlePos,
-                    width: circleWidth
+                    width: circleWidth,
+                    fontsize: fontSize,
+                    fontcolor: fontColor
                 });
 
             })//end circle each
@@ -490,7 +522,11 @@
             circle.css('top', circleData.position.top + 'px');
             circle.width(circleData.width);
             circle.height(circleData.width);
-            $('body').append(circle);
+            circle.find('.textarea').css({
+                'font-size': circleData.fontsize,
+                'color': circleData.fontcolor
+            });
+            $('#main').append(circle);
             $(circle).draggable(draggableOptions);
 
             }) //end circles for each
@@ -538,6 +574,16 @@
             let theLines = $(`.line[data-circle1="${$(circle).attr('id')}"],.line[data-circle2="${$(circle).attr('id')}"]`);
             return theLines;
         }
+
+        //CHANGE FONT SIZE
+        $('#fontsize').change(function(){
+            $('.circle.selected').find('.textarea').css('font-size', this.value + 'px');
+        })
+
+        //CHANGE FONT COLOR
+        $('body').on('input', '#fontcolor', function(){
+            $('.circle.selected').find('.textarea').css('color', this.value);
+        })
 
     </script>
     
