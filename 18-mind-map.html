@@ -279,11 +279,17 @@
             $(this).toggleClass('selected');
         });
 
+        //ADD OR REMOVE THE SELECTED CLASS OF A LINE WHEN IT'S CLICKED
+        $('body').on('click', '.line', function(){
+            $(this).toggleClass('selected');
+        });
 
-        //remove selection from circles if you click on the body
+
+        //remove selection from circles if you click on the body (on an empty area)
         $('body').click(function(event){
             if ($(event.target).is('body')){
                 $('.circle').removeClass('selected');
+                $('.line').removeClass('selected');
             }
         })
 
