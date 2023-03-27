@@ -29,8 +29,16 @@
         }
 
         div#header {
+            display: grid;
+            grid-template-columns: 3fr repeat(9, 1fr);
+            background-color: white;
+            box-shadow: 1px 1px 10px black;
+        }
+
+        .uiElem {
             display: flex;
             align-items: center;
+            justify-content: center;
         }
 
         #header h1 {
@@ -66,6 +74,31 @@
             transform-origin: 0 100%;
         }
 
+        /* BUTTON STYLES */
+        #deleteSave {
+            display: block;
+            font-size:14px;
+            font-family:'Courier New', Courier, monospace;
+            width:122px;
+            height:47px;
+            border-width:2px;
+            margin: 1rem;
+            color:#fff;
+            border-color:#314179;
+            font-weight:bold;
+            border-top-left-radius:9px;
+            border-top-right-radius:9px;
+            border-bottom-left-radius:9px;
+            border-bottom-right-radius:9px;
+            box-shadow:inset -3px -3px 10px 0px #7a8eb9;
+            text-shadow:inset 0px 0px 0px #fff;
+            background:linear-gradient(#637aad, #5972a7);
+        }
+
+        #deleteSave:hover {
+            background: linear-gradient(#5972a7, #637aad);
+        }
+
 
 
     </style>
@@ -76,10 +109,16 @@
 <body>
 
     <div id="header">
-        <h1>mind map maker</h1>
-        <div class="plusButton">+</div>
-        <input type="color" id="color">
-        <input type="range" min="50" max="1500" value="200" id="circleSize">
+        <div class="uiElem"><h1>mind map maker</h1></div>
+        <div class="uiElem"><div class="plusButton">+</div></div>
+        <div class="uiElem"><input type="color" id="color"></div>
+        <div class="uiElem"><input type="range" min="50" max="1500" value="200" id="circleSize"></div>
+        <div class="uiElem"></div>
+        <div class="uiElem"></div>
+        <div class="uiElem"></div>
+        <div class="uiElem"></div>
+        <div class="uiElem"></div>
+        <div class="uiElem"><button id="deleteSave">delete</button></div>
     </div>
 
     <div class="circle" id="c0">
@@ -412,6 +451,17 @@
 
         }//end load from local storage
 
+
+        //DELETE LOCAL STORAGE SAVE
+        $('#deleteSave').click(()=>{
+            if (confirm("you really sure you wanna delete the saved mind map from storage?")){
+                localStorage.removeItem('mindMapMakerData');
+                localStorage.removeItem('latestID');
+                window.location.reload(); //this refreshes the page
+            }
+        });
+
+        //CONTROL DRAG TO CLONE A CIRCLE
 
     </script>
     
