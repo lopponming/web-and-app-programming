@@ -140,7 +140,10 @@
         </div>
         <div class="uiElem">
             <button id="download">download</button></div>
-        <div class="uiElem"></div>
+        <div class="uiElem">
+            <h4>open file</h4>
+            <input type="file" id="jsonFile" accept="application/json">
+        </div>
         <div class="uiElem"></div>
         <div class="uiElem"><button id="deleteSave">delete</button></div>
     </div>
@@ -598,6 +601,23 @@
             document.body.appendChild(myLink);
             myLink.click();
             document.body.removeChild(myLink);
+        })
+
+        //HANDLE FILE UPLOAD
+        $('#jsonFile').change(function(event){
+            const file = event.target.files[0];
+            if (file){
+                const myReader = new FileReader();
+                myReader.onload = function(ev){
+                    try {
+                        localStorage.setItem('mindMapMakerData', ev.target.result);
+                        loadFromLocalStorage();
+                    } catch (error){
+                        alert('the file was not right: ' + error);
+                    }
+                } 
+                myReader.readAsText(file);
+            }
         })
 
 
