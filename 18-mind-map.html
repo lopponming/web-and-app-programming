@@ -138,7 +138,8 @@
             <h4>change font color</h4>
             <input type="color" id="fontcolor">
         </div>
-        <div class="uiElem"></div>
+        <div class="uiElem">
+            <button id="download">download</button></div>
         <div class="uiElem"></div>
         <div class="uiElem"></div>
         <div class="uiElem"><button id="deleteSave">delete</button></div>
@@ -584,6 +585,21 @@
         $('body').on('input', '#fontcolor', function(){
             $('.circle.selected').find('.textarea').css('color', this.value);
         })
+
+        //DETECT CLICKS ON THE DOWNLOAD BUTTON
+        $('#download').click(function(){
+            const data = extractData();
+            const jsonData = JSON.stringify(data);
+            const myBlob = new Blob([jsonData], {type: 'application/json'});
+            const myLink = document.createElement('a'); //create a new temporary link
+            myLink.href = URL.createObjectURL(myBlob);
+            myLink.download = 'mindmap.json';
+
+            document.body.appendChild(myLink);
+            myLink.click();
+            document.body.removeChild(myLink);
+        })
+
 
     </script>
     
