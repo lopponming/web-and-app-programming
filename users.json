@@ -1,0 +1,17 @@
+[
+    {
+        "id": 1,
+        "name": "Sirenzie Holland",
+        "email": "sirenzie.holland@example.com"
+    },
+    {
+        "id": 2,
+        "name": "Emilie Evans",
+        "email": "emilie.evans@example.com"
+    },
+    {
+        "id": 3,
+        "name": "Miranda Klockars",
+        "email": "miranda.klockars@tuni.fi"
+    }
+]
