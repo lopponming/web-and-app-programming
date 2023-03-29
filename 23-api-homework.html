@@ -11,9 +11,8 @@
 
     body {
         font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-        background-color: #faebd7;
-        color: #556482;
-        display: grid;
+        background-color: #22312d;
+        color: #c1c8d5;
         margin: 1rem 5rem 5rem;
     }
 
@@ -23,10 +22,30 @@
         align-items: center;
     }
 
+    .container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-auto-rows: minmax(300px, auto);
+        gap: 1rem;
+        padding: 20px;
+    }
+
     .latestVideo {
         display: flex;
         flex-direction: column;
+        justify-content: center;
         align-items: center;
+        padding: 1rem;
+        border: 2px solid #5d7a4a;
+    }
+
+    .latestVideo h2 {
+        margin-top: 1rem;
+    }
+
+    .latestVideo img {
+        max-width: 100%;
+        height: auto;
     }
 
 </style>
@@ -37,46 +56,56 @@
         <h1>my fave youtube videos, right here in one place:</h1>
     </header>
 
+    <div class="container">
+        <!-- this is where the videos will go (dynamically with JS) -->
+    </div>
+
     <script>
 
+        //amanda rach lee, jelarts, the purple palace, thatoneartist
+        //pypah'sart, iskall85, mumbo jumbo
         const endpoint = 'https://www.googleapis.com/youtube/v3/search';
-        const channelID = 'UCk9aeo2A6a1fg3VeRueTn9w';
+        const channelIDs = ['UCk9aeo2A6a1fg3VeRueTn9w', 'UCfuZ629DaCMap9gVd2taFyA', 'UCcZEPPdyeNDRKII4XLS3I0A', 'UCTbKykrnxSe1YAH5lawVx9w', 'UCFCBoWc9nTpgJXaTMnyAtDw', 'UCZ9x-z3iOnIbJxVpm1rsu2A', 'UChFur_NwVSbUozOcF_F2kMg']
 
-        const url = `${endpoint}?part=snippet&channelId=${channelID}&order=date&type=video&key=AIzaSyCMlmZAzxZXUZxR9QEqCTkV6yJxPHiAPic`;
+        channelIDs.forEach(channelID => {
+            const url = `${endpoint}?part=snippet&channelId=${channelID}&order=date&type=video&key=AIzaSyCMlmZAzxZXUZxR9QEqCTkV6yJxPHiAPic`;
 
-        //make a request to the Youtube Data API 
-        fetch(url)
-        .then(response => {
-            //check if the response is ok
-            if (!response.ok){
-                throw new Error('network response was not ok');
-            }
-            //parse the respons
-            return response.json();
+            //make a request to the Youtube Data API 
+            fetch(url)
+            .then(response => {
+                //check if the response is ok
+                if (!response.ok){
+                    throw new Error('network response was not ok');
+                }
+                //parse the respons
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+
+                const myNewVideo = document.createElement('div');
+                myNewVideo.classList.add('latestVideo');
+
+                const myNewTitle = document.createElement('h2');
+                myNewTitle.textContent = data.items[0].snippet.title;
+                myNewVideo.append(myNewTitle);
+
+                const myNewParagraph = document.createElement('p');
+                myNewParagraph.textContent = data.items[0].snippet.description;
+                myNewVideo.append(myNewParagraph);
+
+                const myNewImage = document.createElement('img');
+                myNewImage.src = data.items[0].snippet.thumbnails.high.url;
+                myNewVideo.append(myNewImage);
+
+                document.querySelector('.container').append(myNewVideo);
+            })
+            .catch(error => {
+                console.error('error: ', error);
+            })
+
         })
-        .then(data => {
-            console.log(data);
-
-            const myNewVideo = document.createElement('div');
-            myNewVideo.classList.add('latestVideo');
-
-            const myNewTitle = document.createElement('h2');
-            myNewTitle.textContent = data.items[0].snippet.title;
-            myNewVideo.append(myNewTitle);
-
-            const myNewParagraph = document.createElement('p');
-            myNewParagraph.textContent = data.items[0].snippet.description;
-            myNewVideo.append(myNewParagraph);
-
-            const myNewImage = document.createElement('img');
-            myNewImage.src = data.items[0].snippet.thumbnails.high.url;
-            myNewVideo.append(myNewImage);
-
-            document.body.append(myNewVideo);
-        })
-        .catch(error => {
-            console.error('error: ', error);
-        })
+        
 
     </script>
     
