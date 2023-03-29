@@ -445,6 +445,7 @@
 
             //loop through each circle and push the needed info as an object into an array
             let circlesData = [];
+
             $('.circle').each(function(){
                 const circleID = $(this).attr('id');
                 const circleText = $(this).find('.textarea').text();
@@ -478,6 +479,7 @@
             });
 
             return {
+                latestID: newCircleID,
                 circles: circlesData,
                 lines: linesData
             }
@@ -490,7 +492,7 @@
             const myData = extractData(); //store the return value of extractData into a variable called myData
             const jsonData = JSON.stringify(myData);
             localStorage.setItem('mindMapMakerData', jsonData);
-            localStorage.setItem('latestID', newCircleID);
+            //localStorage.setItem('latestID', newCircleID);
         }
 
         //GET THE CIRCLES AND LINES BACK FROM LOCAL STORAGE
@@ -498,12 +500,14 @@
             const jsonData = localStorage.getItem('mindMapMakerData');
             if (!jsonData) return; //quit/exit the function early if there is no data yet
 
-            const theLatestId = localStorage.getItem('latestID');
-            if (!theLatestId) return;
+            //const theLatestId = localStorage.getItem('latestID');
+            //if (!theLatestId) return;
 
-            newCircleID = theLatestId;
+            //newCircleID = theLatestId;
 
             const myData = JSON.parse(jsonData);
+
+            newCircleID = myData.latestID;
 
             //clear existing elements
             $('.circle').remove();
