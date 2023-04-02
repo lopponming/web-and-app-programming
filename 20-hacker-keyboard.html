@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,40 +8,39 @@
     <title>Document</title>
 
     <style>
-
         body {
             font-family: 'Courier New', Courier, monospace;
             background-color: black;
             color: lime;
         }
-        
+
         #cursor {
-        display: inline-block;
-        width: 10px;
-        height: 1.2em;
-        background-color: lime;
-        animation: blink 0.7s step-end infinite;
-        margin-left: 2px;
-    }
-
-     @keyframes blink {
-        50% {
-        opacity: 0;
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;
+            background-color: lime;
+            animation: blink 0.7s step-end infinite;
+            margin-left: 2px;
         }
-    }
 
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
     </style>
 
 </head>
+
 <body>
 
     <div id="cursor"></div>
 
-<script src="jquery-3.6.3.js"></script>
+    <script src="jquery-3.6.3.js"></script>
 
-<script>
+    <script>
 
-    const text = `# Running SQL Injection script...
+        const text = `# Running SQL Injection script...
         execute_query("SELECT * FROM users WHERE username = '" + admin_username + "' AND password = '" + admin_password + "';")
 
         # Injecting malicious code...
@@ -64,32 +64,57 @@
         # Cleaning up traces...
         remove_logs()`
 
-    //put each character of the string inside an array
+        //put each character of the string inside an array
 
-    let myArray = [];
+        let myArray = [];
+        let characterIndex = 0;
+        let capsLockPressed = false
+        let accessGranted = false //initially set to false
+        const cursor = $('#cursor'); //selecting the element with ID "cursor"
 
-    let characterIndex = 0;
-
-    const cursor = $('#cursor'); //selecting the element with ID "cursor"
-
-    for (let i=0; i < text.length; i++){
-
-        myArray.push(text[i]);
-    }
-
-    $(document).on('keydown', function(event){
-
-        if (myArray[characterIndex] === "\n"){
-            $('body').append('<br>');
-        } else {
-            $('body').append(myArray[characterIndex]);
+        for (let i = 0; i < text.length; i++) {
+            myArray.push(text[i]);
         }
-        $('body').append(cursor); //append the cursor always as the last element in body
 
-        characterIndex++;
-    })
+        function handleKeyPress(event) {
+            if (!capsLockPressed) {
+                if (event.which !== 20) {
+                    $('body').append('Access Denied<br>');
+                    return;
+                } else {
+                    $('body').append('Access Granted<br>');
+                    capsLockPressed = true;
+                }
+            } else {
+                if (!accessGranted){
+                    accessGranted = true;
+                    $('body').append(cursor);
+                }
+            }
 
-</script>
-    
+            if (event.which === 8) {
+                $('body').html('');
+                characterIndex = 0;
+                accessGranted = false;
+                capsLockPressed = false;
+                $('body').append(cursor);
+                return;
+            }
+            if (accessGranted) {
+                if (myArray[characterIndex] === "\n") {
+                    $('body').append('<br>');
+                } else {
+                    $('body').append(myArray[characterIndex]);
+                }
+                $('body').append(cursor);
+                characterIndex++;
+            }
+        }
+
+        $(document).on('keydown', handleKeyPress);
+
+    </script>
+
 </body>
+
 </html>
